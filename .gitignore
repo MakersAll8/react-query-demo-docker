@@ -1,0 +1,11 @@
+# ignore everything in root
+/*
+
+# don't ignore these
+!/.gitignore
+!/.dockerignore
+!/docker-compose.yml
+!/README.md
+
+# ignore
+**/bitbucket-rsa-key

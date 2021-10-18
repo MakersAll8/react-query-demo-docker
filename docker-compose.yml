@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  test-app:
+    # build specifies where the Dockerfile is for test-app
+    build:
+      context: .
+      dockerfile: ./test-app/Dockerfile
+      target: test-app
+    ports:
+      - 8892:3000
+      # exposing the port (9229) for remote debugging
+      - 8893:9229
+    volumes:
+      # specifies path to code and mount point in container
+      - ./test-app:/home/node/test-app
+    stdin_open: true
+  test-app-service:
+    build:
+      context: .
+      dockerfile: ./test-app-service/Dockerfile
+    ports:
+      - 8890:3000
+      - 8891:9229
+    volumes:
+      - ./test-app-service:/home/node/test-app-service/
+    links:
+      - postgres      
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    # not specifying mount point on host. let docker manage the mount point to persist data
+    volumes:
+      - /var/lib/postgresql/data
+    ports:
+      - 5434:5432
